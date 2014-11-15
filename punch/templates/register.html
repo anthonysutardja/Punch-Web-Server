@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}Register{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block body %}
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_ul }}
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}

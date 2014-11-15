@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}Welcome{% endblock %}
+
+{% block css %}
+    <link href="{% static "css/cover.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+          {% include "partials/nav.html" %}
+
+          <div class="inner cover">
+            <h1 class="cover-heading"><span class="purple">Punch</span> your wine.</h1>
+            <p class="lead">Punch is a continuous Brix and temperature monitoring service for your fermenting wines. We'll aggregate the readings and send you realtime alerts when something's not quite right. Just drop it in a tank, and relax.</p>
+            <p class="lead">
+              <a href="#" class="btn btn-lg btn-default">Learn more</a>
+            </p>
+          </div>
+
+          <div class="mastfoot">
+            <div class="inner">
+              <p>A final project for <a href="http://husk.eecs.berkeley.edu/courses/cs294-84-fall14">Interactive Device Design</a>, by Team CAZM.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+{% endblock %}
