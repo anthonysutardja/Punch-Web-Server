@@ -26,3 +26,8 @@ This will install all the necessary Python requirements and setup the punch data
 ## Running migrations and upgrading the database
 
     python manage.py migrate
+
+
+## Resetting (dropping) the database
+
+    ./reset.sh
