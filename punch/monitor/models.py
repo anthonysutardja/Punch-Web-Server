@@ -43,4 +43,5 @@ class Tank(models.Model):
 
     def deactivate(self):
         """Deactivate this tank."""
-        self.ended_at = datetime.utcnow()
+        if self.is_active:
+            self.ended_at = datetime.utcnow()
