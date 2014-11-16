@@ -15,11 +15,11 @@ class UserCreationForm(forms.ModelForm):
         'password_mismatch': "The two password fields didn't match.",
     }
 
-    username = forms.CharField(label="Email", max_length=30, validators=[EmailValidator])
+    username = forms.CharField(label="Email address", max_length=30, validators=[EmailValidator])
 
     password1 = forms.CharField(label="Password",
         widget=forms.PasswordInput)
-    password2 = forms.CharField(label="Password confirmation",
+    password2 = forms.CharField(label="Confirm password",
         widget=forms.PasswordInput,
         help_text="Enter the same password as above, for verification.")
 

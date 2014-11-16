@@ -3,9 +3,9 @@
               <h3 class="masthead-brand">Punch</h3>
               <nav>
                 <ul class="nav masthead-nav">
-                  <li class="active"><a href="/">Home</a></li>
-                  <li><a href="/about">Features</a></li>
-                  <li><a href="/dashboard">Dashboard</a></li>
+                  <li {% if request.path == '/' %} class="active"{% endif %}><a href="/">Home</a></li>
+                  <li {% if request.path == '/about' %} class="active"{% endif %}><a href="/about">Features</a></li>
+                  <li {% if request.path == '/dashboard' %} class="active"{% endif %}><a href="/dashboard">Dashboard</a></li>
                 </ul>
               </nav>
             </div>

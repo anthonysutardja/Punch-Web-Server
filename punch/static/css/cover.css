@@ -13,7 +13,7 @@ a:hover {
 .btn-default,
 .btn-default:hover,
 .btn-default:focus {
-  color: #333;
+  color: #8e44ad;
   text-shadow: none; /* Prevent inheritence from `body` */
   background-color: #fff;
   border: 1px solid #fff;
@@ -136,7 +136,7 @@ body {
   .masthead {
     position: fixed;
     top: 0;
-     background-color: rgba(142, 68, 173, 0.9);
+    background-color: #8e44ad;
   }
   .mastfoot {
     position: fixed;
@@ -159,11 +159,15 @@ body {
   .mastfoot,
   .cover-container {
     width: 700px;
-    background-color: rgba(142, 68, 173, 0.9);
+    background-color: #8e44ad;
   }
 }
 
 .purple {
   font-weight: bolder;
   color: #d6b8e3;
+}
+
+.alert-warning {
+    text-shadow: none;
 }

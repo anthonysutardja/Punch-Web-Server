@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load addcss %}
+{% block title %}Login{% endblock %}
+
+{% block css %}
+    <link href="{% static "css/cover.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div class="site-wrapper">
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+          {% include "partials/nav.html" %}
+
+          <div class="inner cover">
+            <h3 class="cover-heading">Welcome back! Enter your credentials.</h3>
+            <br/>
+            <form method="POST" class="form-horizontal" role="form">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                <div class="col-sm-offset-2 col-sm-7 alert alert-warning" role="alert">
+                  <span class="sr-only">Error:</span>
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+                {% if form.username.errors %}
+                <div class="col-sm-offset-2 col-sm-7 alert alert-warning" role="alert">
+                  <span class="sr-only">Error:</span>
+                  {{ form.username.errors }}
+                </div>
+                {% endif %}
+                <div class="form-group">
+                    <label for="id_username" class="col-sm-offset-2 col-sm-3 control-label">{{ form.username.label }}</label>
+                    <div class="col-sm-4">
+                        {{ form.username | addcss:"form-control"}}
+                    </div>
+                </div>
+                {% if form.password.errors %}
+                <div class="col-sm-offset-2 col-sm-7 alert alert-warning" role="alert">
+                  <span class="sr-only">Error:</span>
+                  {{ form.password.errors }}
+                </div>
+                {% endif %}
+                <div class="form-group">
+                    <label for="id_password" class="col-sm-offset-2 col-sm-3 control-label">{{ form.password.label }}</label>
+                    <div class="col-sm-4">
+                        {{ form.password | addcss:"form-control"}}
+                    </div>
+                </div>
+                <br/>
+                <button type="submit" class="btn btn-lg btn-default">Login</button>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+{% endblock %}

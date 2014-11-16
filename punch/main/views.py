@@ -27,7 +27,7 @@ class RegisterView(CreateView):
 
 
 class LoginView(FormView):
-    template_name = 'register.html'
+    template_name = 'login.html'
     form_class = AuthenticationForm
     success_url = '/dashboard'
 
