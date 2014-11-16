@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}Viewing {{ location.name }}{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ location.name }}</h1>
+
+    <h4>Connected bridges to {{ location.name }}:</h4>
+    <ul>
+    {% for bridge in location.bridge_set.all %}
+        <li>{{ bridge.uuid }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

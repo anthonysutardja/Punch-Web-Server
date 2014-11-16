@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -12,6 +13,15 @@ class Location(models.Model):
     # https://docs.djangoproject.com/en/dev/topics/db/examples/many_to_many/
     users = models.ManyToManyField(User)
 
+    def get_absolute_url(self):
+        return '/location/{id}/'.format(id=self.id)
+
+    def __repr__(self):
+        return '<Location: {name}>'.format(name=self.name)
+
+    def __str__(self):
+        return '<{name}>'.format(name=self.name)
+
 
 class Bridge(models.Model):
     """Model that identifies a central hub."""
@@ -21,6 +31,9 @@ class Bridge(models.Model):
     # For more details about many-to-one relationships in Django:
     # https://docs.djangoproject.com/en/1.7/topics/db/examples/many_to_one/
     location = models.ForeignKey(Location)
+
+    def get_absolute_url(self):
+        return self.location.get_absolute_url()
 
 
 class Tank(models.Model):

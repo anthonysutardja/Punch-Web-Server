@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}Create a new location{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block body %}
+    {% if location %}
+        <h1>{{ location.name }}</h1>
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% if location %}
+            <button type="submit" class="btn btn-large btn-primary">Save</button>
+        {% else %}
+            <button type="submit" class="btn btn-large btn-primary">Create</button>
+        {% endif %}
+    </form>
+{% endblock %}

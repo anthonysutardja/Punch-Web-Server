@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}Add a new bridge{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block body %}
+    <h1>Add a bridge to {{ location.name }}</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-large btn-primary">Add</button>
+    </form>
+{% endblock %}
