@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView, FormView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login
+from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 
 from punch.main.forms import UserCreationForm

@@ -59,11 +59,11 @@ class UserCreationForm(forms.ModelForm):
         # The email and the username should be the same
         user.email = user.username
 
-
         # Force the save, disregard the commit flag
         user.save()
 
         # Hook it up to a user profile
         user_profile = UserProfile(user=user, phone_number=self.cleaned_data["phone_number"])
         user_profile.save()
+
         return user
