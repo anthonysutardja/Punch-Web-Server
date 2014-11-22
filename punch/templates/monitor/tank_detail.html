@@ -1,7 +1,7 @@
 {% extends "dash_base.html" %}
 {% load staticfiles %}
-{% block title %}Add a new bridge{% endblock %}
-{% block nav_title %}Add bridge{% endblock %}
+{% block title %}Viewing {{ tank.name }}{% endblock %}
+{% block nav_title %}{{ tank.name }}{% endblock %}
 
 {% block css %}
 {% endblock %}
@@ -12,11 +12,7 @@
         <li class="previous"><a href="{{ location.get_absolute_url }}"><span aria-hidden="true">&larr;</span> Back to location page</a></li>
       </ul>
     </nav>
+    <h1>{{ tank.name }}</h1>
 
-    <h1>Add a bridge to {{ location.name }}</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-large btn-primary">Add</button>
-    </form>
+    <h4>Last updated..(some reading time)</h4>
 {% endblock %}

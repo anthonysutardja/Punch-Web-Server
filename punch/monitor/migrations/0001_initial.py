@@ -38,8 +38,11 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('sensor_uuid', models.CharField(max_length=32)),
+                ('name', models.CharField(max_length=80)),
                 ('started_at', models.DateTimeField(auto_now_add=True)),
                 ('ended_at', models.DateTimeField(null=True, blank=True)),
+                ('y', models.IntegerField(null=True, blank=True)),
+                ('x', models.IntegerField(null=True, blank=True)),
                 ('location', models.ForeignKey(to='monitor.Location')),
             ],
             options={

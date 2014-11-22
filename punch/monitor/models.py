@@ -40,11 +40,16 @@ class Tank(models.Model):
     """Model that contains the fermentation tank abstraction."""
     # TODO: Figure out if this is the correct length for 128-bit hex identifier
     sensor_uuid = models.CharField(max_length=32)
+    name = models.CharField(max_length=80)
 
     # Start/End date stuff
     # Automatically add the start date when the object is first created
     started_at = models.DateTimeField(auto_now_add=True)
     ended_at = models.DateTimeField(blank=True, null=True)
+
+    # For UI Placement
+    y = models.IntegerField(blank=True, null=True)
+    x = models.IntegerField(blank=True, null=True)
 
     # Relationships
     location = models.ForeignKey(Location)
@@ -58,3 +63,6 @@ class Tank(models.Model):
         """Deactivate this tank."""
         if self.is_active:
             self.ended_at = datetime.utcnow()
+
+    def get_absolute_url(self):
+        return self.location.get_absolute_url() + 'tank/{id}/'.format(id=self.id)

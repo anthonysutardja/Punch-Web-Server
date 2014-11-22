@@ -1,17 +1,53 @@
-{% extends "base.html" %}
+{% extends "dash_base.html" %}
 {% load staticfiles %}
-{% block title %}Viewing {{ location.name }}{% endblock %}
+{% block title %}{{ location.name }}{% endblock %}
+{% block nav_title %}{{ location.name }}{% endblock %}
 
 {% block css %}
 {% endblock %}
 
 {% block body %}
-    <h1>{{ location.name }}</h1>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Active tanks</h3>
+      </div>
+      <div class="panel-body">
+      {% if active_tanks %}
+        <ul>
+        {% for tank in active_tanks %}
+            <li><a href="{{ tank.get_absolute_url }}">{{ tank.name }}</a> <small>({{ tank.sensor_uuid }})</small></li>
+        {% endfor %}
+        </ul>
+      {% else %}
+          <p>There are currently no active batches being monitored.</p>
 
-    <h4>Connected bridges to {{ location.name }}:</h4>
+          <a href="{{ location.get_absolute_url }}tank/add" class="btn btn-medium btn-default">Add a new tank</a>
+      {% endif %}
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Inactive tanks</h3>
+      </div>
+      <div class="panel-body">
+      {% if finished_tanks %}
+        <ul>
+        {% for tank in finished_tanks %}
+            <li><a href="{{ tank.get_absolute_url }}">{{ tank.name }}</a> <small>({{ tank.sensor_uuid }})</small></li>
+        {% endfor %}
+        </ul>
+      {% else %}
+          <p>You don't have any finished batches yet! Get cracking!</p>
+      {% endif %}
+      </div>
+    </div>
+
+    <br/><br/>
+    <h5>Connected bridges to {{ location.name }}:</h5>
     <ul>
     {% for bridge in location.bridge_set.all %}
         <li>{{ bridge.uuid }}</li>
     {% endfor %}
     </ul>
+    <a href="{{ location.get_absolute_url }}bridge/add" class="btn btn-xs btn-primary">Add another bridge</a>
 {% endblock %}

@@ -1,6 +1,7 @@
-{% extends "base.html" %}
+{% extends "dash_base.html" %}
 {% load staticfiles %}
 {% block title %}Create a new location{% endblock %}
+{% block nav_title %}Create location{% endblock %}
 
 {% block css %}
 {% endblock %}
@@ -8,6 +9,8 @@
 {% block body %}
     {% if location %}
         <h1>{{ location.name }}</h1>
+    {% else %}
+        <h1>We need a few details to setup your new location.</h1>
     {% endif %}
     <form method="POST">
         {% csrf_token %}

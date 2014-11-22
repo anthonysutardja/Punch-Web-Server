@@ -1,0 +1,40 @@
+nav.navbar-default {
+    border-radius: 0;
+}
+a {
+    color: #8e44ad;
+}
+a.navbar-brand{
+    padding-top: 13px;
+}
+
+@media (min-width: 768px) {
+    .container-wrap {
+        width: 100%;
+    }
+}
+
+@media (min-width: 992px) {
+    .container-wrap {
+        width: 960px;
+    }
+}
+
+
+.panel-primary {
+    border-color: #8e44ad;
+}
+
+.panel-primary > .panel-heading {
+    border-color: #8e44ad;
+    background-color: #8e44ad;
+}
+
+.btn-primary {
+    border-color: #8e44ad;
+    background-color: #8e44ad;
+}
+.btn-primary:hover {
+    border-color: #602d73;
+    background-color: #602d73;
+}

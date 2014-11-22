@@ -19,6 +19,7 @@ from punch.mixins import LoginRequiredMixin
 
 class LocationCreateView(LoginRequiredMixin, CreateView):
     model = Location
+    fields = ('name', 'users')
 
 
 class LocationEditView(LoginRequiredMixin, UpdateView):
@@ -31,6 +32,12 @@ class LocationDeleteView(LoginRequiredMixin, DeleteView):
 
 class LocationView(LoginRequiredMixin, DetailView):
     model = Location
+
+    def get_context_data(self, **kwargs):
+        context = super(LocationView, self).get_context_data(**kwargs)
+        context['active_tanks'] = [tank for tank in self.object.tank_set.all() if tank.is_active]
+        context['finished_tanks'] = [tank for tank in self.object.tank_set.all() if not tank.is_active]
+        return context
 
 
 class BridgeCreateView(LoginRequiredMixin, CreateView):
@@ -55,6 +62,18 @@ class BridgeDeleteView(LoginRequiredMixin, DeleteView):
 
 class TankCreateView(LoginRequiredMixin, CreateView):
     model = Tank
+    fields = ('sensor_uuid', 'name')
+
+    def get_context_data(self, **kwargs):
+        context = super(TankCreateView, self).get_context_data(**kwargs)
+        location = Location.objects.get(pk=int(self.kwargs.get('l_pk')))
+        context['location'] = location
+        return context
+
+    def form_valid(self, form):
+        location = Location.objects.get(pk=self.kwargs.get('l_pk'))
+        form.instance.location = location
+        return super(TankCreateView, self).form_valid(form)
 
 
 class TankEditView(LoginRequiredMixin, UpdateView):
@@ -67,3 +86,9 @@ class TankDeleteView(LoginRequiredMixin, DeleteView):
 
 class TankView(LoginRequiredMixin, DetailView):
     model = Tank
+
+    def get_context_data(self, **kwargs):
+        context = super(TankView, self).get_context_data(**kwargs)
+        location = Location.objects.get(pk=int(self.kwargs.get('l_pk')))
+        context['location'] = location
+        return context

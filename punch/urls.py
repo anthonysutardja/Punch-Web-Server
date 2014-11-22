@@ -18,5 +18,7 @@ urlpatterns = patterns(
     url(r'^location/(?P<pk>\d+)/$', monitor_views.LocationView.as_view(), name='location-detail'),
     url(r'^location/(?P<pk>\d+)/edit$', monitor_views.LocationEditView.as_view(), name='location-edit'),
     url(r'^location/(?P<l_pk>\d+)/bridge/add$', monitor_views.BridgeCreateView.as_view(), name='bridge-create'),
+    url(r'^location/(?P<l_pk>\d+)/tank/add$', monitor_views.TankCreateView.as_view(), name='tank-create'),
+    url(r'^location/(?P<l_pk>\d+)/tank/(?P<pk>\d+)/$', monitor_views.TankView.as_view(), name='tank-create'),
     url(r'^admin/', include(admin.site.urls)),
 )

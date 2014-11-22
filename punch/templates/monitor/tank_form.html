@@ -1,7 +1,7 @@
 {% extends "dash_base.html" %}
 {% load staticfiles %}
-{% block title %}Add a new bridge{% endblock %}
-{% block nav_title %}Add bridge{% endblock %}
+{% block title %}Add a new tank{% endblock %}
+{% block nav_title %}Add tank{% endblock %}
 
 {% block css %}
 {% endblock %}
@@ -13,7 +13,7 @@
       </ul>
     </nav>
 
-    <h1>Add a bridge to {{ location.name }}</h1>
+    <h1>Add a new tank to {{ location.name }}</h1>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
