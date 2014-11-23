@@ -7,6 +7,7 @@ from punch.monitor.models import (
     Bridge,
     Tank,
 )
+from punch.monitor.forms import TankCreationForm
 from punch.mixins import LoginRequiredMixin
 
 
@@ -70,6 +71,7 @@ class BridgeDeleteView(LoginRequiredMixin, DeleteView):
 
 class TankCreateView(LoginRequiredMixin, CreateView):
     model = Tank
+    form_class = TankCreationForm
     fields = ('sensor_uuid', 'name')
 
     def get_context_data(self, **kwargs):

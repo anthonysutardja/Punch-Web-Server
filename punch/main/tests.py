@@ -1,76 +1,26 @@
-from django.contrib.auth.models import User
 from django.test import TestCase
 
-from punch.monitor.models import Location, Bridge, Tank
 
+class UserCreationForm(forms.ModelForm):
+    """
+    A form that creates a user, with no privileges, from the given username and
+    password.
+    """
+    error_messages = {
+        'duplicate_username': "A user with that username already exists.",
+        'password_mismatch': "The two password fields didn't match.",
+    }
 
-class LocationTestCase(TestCase):
+    username = forms.CharField(label="Email address", max_length=30, validators=[EmailValidator])
 
-    def setUp(self):
-        self.user = User.objects.create(username='derp', password='herp')
-        self.location = None
+    password1 = forms.CharField(label="Password",
+        widget=forms.PasswordInput)
+    password2 = forms.CharField(label="Confirm password",
+        widget=forms.PasswordInput,
+        help_text="Enter the same password as above, for verification.")
 
-    def tearDown(self):
-        if self.location:
-            self.location.delete()
-        self.user.delete()
+    phone_number = forms.CharField(label="Phone number", max_length=17, validators=[UserProfile.phone_regex])
 
-    def test_add_new_location(self):
-        """Verify that we can add a new location."""
-        self.location = Location(name='1455 Market St')
-        self.location.save()
-        self.location.users.add(self.user)
-        self.location.save()
-
-        # Check that the user is there
-        self.assertEqual(1, len(self.location.users.all()))
-
-
-class BridgeTestCase(TestCase):
-
-    def setUp(self):
-        self.location = Location.objects.create(name='1455 Market St')
-        self.bridge = None
-
-    def tearDown(self):
-        if self.bridge:
-            self.bridge.delete()
-        self.location.delete()
-
-    def test_add_new_bridge(self):
-        """Verify that we can add a new bridge to a new location."""
-        self.bridge = Bridge(uuid='a1a1a1', location=self.location)
-        self.bridge.save()
-
-
-class TankTestCase(TestCase):
-
-    def setUp(self):
-        self.location = Location.objects.create(name='1455 Market St')
-        self.tank = None
-
-    def tearDown(self):
-        if self.tank:
-            self.tank.delete()
-        self.location.delete()
-
-    def test_add_new_tank(self):
-        """Verify that we can add a new tank to a location."""
-        self.tank = Tank(sensor_uuid='111111', location=self.location)
-        self.tank.save()
-
-        # Verify attributes
-        self.assertIsNotNone(self.tank.started_at)
-        self.assertTrue(self.tank.is_active)
-
-    def test_deactivate_tank(self):
-        """Verify that we can deactivate the tank."""
-        self.tank = Tank(sensor_uuid='111111', location=self.location)
-        self.tank.save()
-
-        self.tank.deactivate()
-        self.assertFalse(self.tank.is_active)
-        self.assertLess(
-            self.tank.started_at.replace(tzinfo=None),
-            self.tank.ended_at.replace(tzinfo=None)
-        )
+    class Meta:
+        model = User
+        fields = ("username", "first_name", "last_name")

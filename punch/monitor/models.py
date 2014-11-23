@@ -66,3 +66,16 @@ class Tank(models.Model):
 
     def get_absolute_url(self):
         return self.location.get_absolute_url() + 'tank/{id}/'.format(id=self.id)
+
+
+class Reading(models.Model):
+    """Model that contains each readings for a particular tank."""
+    # Relationships
+    tank = models.ForeignKey(Tank)
+
+    # Metrics
+    temperature = models.FloatField()
+    brix = models.FloatField()
+
+    # Time of reading
+    created_at = models.DateTimeField(auto_now_add=True)
