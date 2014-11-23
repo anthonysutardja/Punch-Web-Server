@@ -1,3 +1,4 @@
+from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import DetailView, TemplateView, FormView, RedirectView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
@@ -39,6 +40,12 @@ class LocationView(LoginRequiredMixin, DetailView):
         context['finished_tanks'] = [tank for tank in self.object.tank_set.all() if not tank.is_active]
         return context
 
+    def dispatch(self, request, *args, **kwargs):
+        location = get_object_or_404(Location, pk=kwargs['pk'])
+        if location and not location.bridge_set.all():
+            return redirect(location.get_absolute_url() + 'bridge/add')
+        return super(LocationView, self).dispatch(request, *args, **kwargs)
+
 
 class BridgeCreateView(LoginRequiredMixin, CreateView):
     model = Bridge
@@ -48,6 +55,7 @@ class BridgeCreateView(LoginRequiredMixin, CreateView):
         context = super(BridgeCreateView, self).get_context_data(**kwargs)
         location = Location.objects.get(pk=int(self.kwargs.get('l_pk')))
         context['location'] = location
+        context['needs_bridge'] = 1 - len(location.bridge_set.all())
         return context
 
     def form_valid(self, form):

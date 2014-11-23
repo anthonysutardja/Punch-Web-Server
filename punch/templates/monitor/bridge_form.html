@@ -7,13 +7,33 @@
 {% endblock %}
 
 {% block body %}
+    {% if not needs_bridge %}
     <nav>
       <ul class="pager">
         <li class="previous"><a href="{{ location.get_absolute_url }}"><span aria-hidden="true">&larr;</span> Back to location page</a></li>
       </ul>
     </nav>
+    {% endif %}
 
-    <h1>Add a bridge to {{ location.name }}</h1>
+    {% if needs_bridge %}
+        <h1>{{ location.name }} <span class="gray">is almost set!</span></h1>
+        <p>
+            Before we can get your location up and running, we'll need to hook up a bridge device to this particular
+            location.
+        </p>
+
+    {% endif %}
+
+    <h3>What's a bridge?</h3>
+    <p>
+        We need to communicate to each sensor in the tank through the a device called a bridge. Our sensor devices are ultra-low
+        powered so that they can continuously keep monitoring your batches of wine. That means they don't have enough power to reach the
+        Internet on their own.
+
+        The bridge relays all the sensor readings to our servers.
+    </p>
+
+    <h3>Add a bridge to <span class="gray">{{ location.name }}</span></h3>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}

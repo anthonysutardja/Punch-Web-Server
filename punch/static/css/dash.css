@@ -20,6 +20,11 @@ a.navbar-brand{
     }
 }
 
+span.gray {
+    color: #777;
+    font-weight: lighter;
+}
+
 
 .panel-primary {
     border-color: #8e44ad;
