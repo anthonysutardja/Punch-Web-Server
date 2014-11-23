@@ -102,3 +102,14 @@ class TankView(LoginRequiredMixin, DetailView):
         location = Location.objects.get(pk=int(self.kwargs.get('l_pk')))
         context['location'] = location
         return context
+
+
+class TankFinishRedirectView(RedirectView):
+
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        tank = get_object_or_404(Tank, pk=kwargs['pk'])
+        tank.deactivate()
+        tank.save()
+        return tank.get_absolute_url()

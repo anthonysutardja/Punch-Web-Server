@@ -12,7 +12,13 @@
         <li class="previous"><a href="{{ location.get_absolute_url }}"><span aria-hidden="true">&larr;</span> Back to location page</a></li>
       </ul>
     </nav>
-    <h1>{{ tank.name }}</h1>
+    {% if tank.is_active %}
+        <p class="lead"><strong>{{ tank.name }}</strong> is reading loud and clear. The last reading was 10 minutes ago.</p>
+    {% else %}
+        <p class="lead"><strong>{{ tank.name }}</strong> has been completed. The historical measurements are shown below.</p>
+    {% endif %}
 
-    <h4>Last updated..(some reading time)</h4>
+    {% if tank.is_active %}
+    <a href="{{ tank.get_absolute_url }}end" class="btn btn-large btn-danger">Finish and stop</a>
+    {% endif %}
 {% endblock %}
