@@ -15,10 +15,12 @@
     {% if tank.is_active %}
         <p class="lead"><strong>{{ tank.name }}</strong> is reading loud and clear. The last reading was 10 minutes ago.</p>
     {% else %}
-        <p class="lead"><strong>{{ tank.name }}</strong> has been completed. The historical measurements are shown below.</p>
+        <p class="lead"><strong>{{ tank.name }}</strong> has been completed. The fermentation process took {{ tank.total_days }} days. The historical measurements are shown below.</p>
     {% endif %}
 
     {% if tank.is_active %}
+    <h4>Done with this batch? Mark it as finished!</h4>
+    <div class="alert alert-warning" role="alert"><strong>Warning!</strong> Once a tank is marked as finished, the tank will no longer receive or record measurements.</div>
     <a href="{{ tank.get_absolute_url }}end" class="btn btn-large btn-danger">Finish and stop</a>
     {% endif %}
 {% endblock %}
