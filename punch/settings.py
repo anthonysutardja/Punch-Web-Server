@@ -106,3 +106,13 @@ STATICFILES_DIRS = (
 
 LOGIN_REDIRECT_URL = '/dashboard'
 LOGIN_URL = '/login'
+
+
+# Cache
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cache_table',
+    }
+}
