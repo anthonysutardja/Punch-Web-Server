@@ -24,3 +24,10 @@
     <a href="{{ tank.get_absolute_url }}end" class="btn btn-large btn-danger">Finish and stop</a>
     {% endif %}
 {% endblock %}
+
+{% block js %}
+    <!-- Load reading data -->
+    <script>
+        var tankReadings = {{ readings | safe}};
+    </script>
+{% endblock %}

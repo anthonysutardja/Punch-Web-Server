@@ -1,3 +1,7 @@
+from datetime import datetime, timedelta
+from random import random
+
+from django.core import serializers
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import DetailView, TemplateView, FormView, RedirectView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -6,6 +10,7 @@ from punch.monitor.models import (
     Location,
     Bridge,
     Tank,
+    Reading,
 )
 from punch.monitor.forms import TankCreationForm
 from punch.mixins import LoginRequiredMixin
@@ -101,7 +106,23 @@ class TankView(LoginRequiredMixin, DetailView):
         context = super(TankView, self).get_context_data(**kwargs)
         location = Location.objects.get(pk=int(self.kwargs.get('l_pk')))
         context['location'] = location
+
+        # Remove for now .. until we have real data
+        # context['readings'] = serializers.serialize('json', self.object.reading_set.all())
+
+        # Stub data below
+        context['readings'] = serializers.serialize('json', self.create_fake_readings())
         return context
+
+    # TODO: remove when we have real readings
+    def create_fake_readings(self):
+        readings = []
+        for i in range(0, 1000):
+            t = random() * 10 + 20
+            b = random() * 5 + 10
+            d = datetime(2014, 11, 24, 18, 12, 8, 393455) + timedelta(minutes=15 * i)
+            readings.append(Reading(temperature=t, brix=b, created_at=d))
+        return readings
 
 
 class TankFinishRedirectView(RedirectView):
