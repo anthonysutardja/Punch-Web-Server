@@ -1,5 +1,6 @@
 {% extends "dash_base.html" %}
 {% load staticfiles %}
+{% load addcss %}
 {% block title %}Add a new tank{% endblock %}
 {% block nav_title %}Add tank{% endblock %}
 
@@ -13,10 +14,62 @@
       </ul>
     </nav>
 
-    <h1>Add a new tank to {{ location.name }}</h1>
+    <h1>Let's set up a new tank for <span class="gray">{{ location.name }}</span></h1>
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% if form.non_field_errors %}
+            <div class="col-sm-7 alert alert-warning" role="alert">
+              <span class="sr-only">Error:</span>
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+        <p class="lead">
+            You'll need to choose from the list of available sensors. Make sure the UUID matches the device that
+            you're putting in the tank.
+        </p>
+        {% if form.sensor_uuid.errors %}
+        <div class="row">
+            <div class="col-sm-7 alert alert-danger" role="alert">
+              <span class="sr-only">Error:</span>
+              {{ form.sensor_uuid.errors }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <div class="row">
+            <label for="id_sensor_uuid" class="col-sm-1 control-label">Sensor UUID</label>
+            <div class="col-sm-4">
+                <select class="form-control" name="{{ form.sensor_uuid.name }}">
+                  {% for s_uuid in sensor_uuids %}
+                      <option>{{ s_uuid }}</option>
+                  {% endfor %}
+                </select>
+            </div>
+            </div>
+        </div>
+
+        <p class="lead">Let's give your tank a <strong>descriptive</strong> name.</p>
+        {% if form.name.errors %}
+        <div class="row">
+            <div class="col-sm-7 alert alert-danger" role="alert">
+              <span class="sr-only">Error:</span>
+              {{ form.name.errors }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <div class="row">
+            <label for="id_name" class="col-sm-1 control-label">{{ form.name.label }}</label>
+            <div class="col-sm-4">
+                {{ form.name | addcss:"form-control"}}
+            </div>
+            </div>
+        </div>
+
+        <br/>
+        <br/>
         <button type="submit" class="btn btn-large btn-primary">Add</button>
     </form>
 {% endblock %}

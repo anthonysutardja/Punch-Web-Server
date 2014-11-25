@@ -86,12 +86,26 @@ class TankCreateView(LoginRequiredMixin, CreateView):
         context = super(TankCreateView, self).get_context_data(**kwargs)
         location = Location.objects.get(pk=int(self.kwargs.get('l_pk')))
         context['location'] = location
+        context['sensor_uuids'] = self.get_sensor_uuids(location)
         return context
 
     def form_valid(self, form):
         location = Location.objects.get(pk=self.kwargs.get('l_pk'))
         form.instance.location = location
+        self.remove_sensor_uuid(location, form.instance.sensor_uuid)
         return super(TankCreateView, self).form_valid(form)
+
+    def get_sensor_uuids(self, location):
+        sensor_uuids = []
+        for bridge in location.bridge_set.all():
+            b = RawBridge(bridge.uuid)
+            sensor_uuids.extend(list(b.get_available_sensors()))
+        return sensor_uuids
+
+    def remove_sensor_uuid(self, location, sensor_uuid):
+        for bridge in location.bridge_set.all():
+            b = RawBridge(bridge.uuid)
+            b.remove_available_sensor(sensor_uuid)
 
 
 class TankEditView(LoginRequiredMixin, UpdateView):
