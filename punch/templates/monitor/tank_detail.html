@@ -18,6 +18,9 @@
         <p class="lead"><strong>{{ tank.name }}</strong> has been completed. The fermentation process took {{ tank.total_days }} days. The historical measurements are shown below.</p>
     {% endif %}
 
+    <div class='detailGraph'></div>
+    <div class='legend'></div>
+
     {% if tank.is_active %}
     <h4>Done with this batch? Mark it as finished!</h4>
     <div class="alert alert-warning" role="alert"><strong>Warning!</strong> Once a tank is marked as finished, the tank will no longer receive or record measurements.</div>
@@ -26,8 +29,60 @@
 {% endblock %}
 
 {% block js %}
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.js' charset='utf-8'></script>
+    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
+    <script src="{% static "assets/js/ace.js" %}" charset="utf-8"></script>
+    <script src="{% static "assets/js/metricsgraphics.js" %}"></script>
+
     <!-- Load reading data -->
     <script>
         var tankReadings = {{ readings | safe}};
     </script>
+
+    <script>
+        $(document).ready(function(){
+            data_graphic({
+            data: [[  {'day': 1, 'value': 35},
+                      {'day': 2, 'value': 34},
+                      {'day': 3, 'value': 29},
+                      {'day': 4, 'value': 22},
+                      {'day': 5, 'value': 15},
+                      {'day': 6, 'value': 9},
+                      {'day': 7, 'value': 4},
+                      {'day': 8, 'value': 2},
+                      {'day': 9, 'value': 1},
+                      {'day': 10, 'value': 1}],
+                  [   {'day': 1, 'value': 35},
+                      {'day': 2, 'value': 35},
+                      {'day': 3, 'value': 35},
+                      {'day': 4, 'value': 30},
+                      {'day': 5, 'value': 25},
+                      {'day': 6, 'value': 18},
+                      {'day': 7, 'value': 10},
+                      {'day': 8, 'value': 5},
+                      {'day': 9, 'value': 4},
+                      {'day': 10, 'value': 2}],
+                  [   {'day': 1, 'value': 21},
+                      {'day': 2, 'value': 22},
+                      {'day': 3, 'value': 25},
+                      {'day': 4, 'value': 29},
+                      {'day': 5, 'value': 31},
+                      {'day': 6, 'value': 30},
+                      {'day': 7, 'value': 28},
+                      {'day': 8, 'value': 25},
+                      {'day': 9, 'value': 22},
+                      {'day': 10, 'value': 21}]],
+            width: 400,
+            height: 250,
+            target: ".detailGraph",
+            x_accessor: 'day',
+            y_accessor: 'value',
+            interpolate: "monotone",
+            legend: ['Expected Brix (in degrees Brix)', 'Actual Brix (in degrees Brix)', 'Temperature (in degrees Celsius)'],
+            legend_target: '.legend'
+        });
+        });
+
+        </script>
 {% endblock %}
