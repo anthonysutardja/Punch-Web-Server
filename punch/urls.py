@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.views.decorators.csrf import csrf_exempt
 
 from punch.main import views as main_views
 from punch.monitor import views as monitor_views
@@ -21,5 +22,7 @@ urlpatterns = patterns(
     url(r'^location/(?P<l_pk>\d+)/tank/add$', monitor_views.TankCreateView.as_view(), name='tank-create'),
     url(r'^location/(?P<l_pk>\d+)/tank/(?P<pk>\d+)/$', monitor_views.TankView.as_view(), name='tank-create'),
     url(r'^location/(?P<l_pk>\d+)/tank/(?P<pk>\d+)/end$', monitor_views.TankFinishRedirectView.as_view(), name='tank-finish'),
+    # Update entry point
+    url(r'^updater$', csrf_exempt(monitor_views.BridgeEntryView.as_view()), name='reading-entry-point'),
     url(r'^admin/', include(admin.site.urls)),
 )

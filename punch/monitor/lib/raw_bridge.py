@@ -9,8 +9,12 @@ class RawBridge(object):
     def __init__(self, bridge_uuid):
         self.bridge_uuid = bridge_uuid
 
-    def set_available_sensors(self, sensor_uuid_list):
-        return cache.set(self._get_sensor_key(), sensor_uuid_list, timeout=None)
+    def add_available_sensor(self, sensor_uuid):
+        sensors = self.get_available_sensors()
+        if not sensors:
+            sensors = set()
+        sensors.add(sensor_uuid)
+        cache.set(self._get_sensor_key(), sensors, timeout=None)
 
     def get_available_sensors(self):
         return cache.get(self._get_sensor_key())

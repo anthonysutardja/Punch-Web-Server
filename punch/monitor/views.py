@@ -1,11 +1,14 @@
+import json
 from datetime import datetime, timedelta
 from random import random
 
 from django.core import serializers
+from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
-from django.views.generic import DetailView, TemplateView, FormView, RedirectView
+from django.views.generic import DetailView, RedirectView, View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
+from punch.monitor.lib.raw_bridge import RawBridge
 from punch.monitor.models import (
     Location,
     Bridge,
@@ -134,3 +137,35 @@ class TankFinishRedirectView(RedirectView):
         tank.deactivate()
         tank.save()
         return tank.get_absolute_url()
+
+
+class BridgeEntryView(View):
+
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            self.process_load(data)
+        except ValueError:
+            pass
+        return HttpResponse(
+            json.dumps({'received': True}),
+            content_type='application/json',
+            **kwargs
+        )
+
+    def process_load(self, data):
+        bridge_uuid = str(data['bridge_uuid'])
+        sensor_uuid = str(data['sensor_uuid'])
+        temperature = float(data['temperature'])
+        brix = float(data['brix'])
+        try:
+            tank = Tank.objects.get(sensor_uuid=sensor_uuid)
+            # If tank exists, add a new reading
+            reading = Reading(temperature=temperature, brix=brix, tank=tank)
+            reading.save()
+        except Tank.DoesNotExist:
+            # Otherwise, tank doesn't exist and should be noticed by the set.
+            r_bridge = RawBridge(bridge_uuid)
+            r_bridge.add_available_sensor(sensor_uuid)
+        except:
+            import ipdb; ipdb.set_trace()
