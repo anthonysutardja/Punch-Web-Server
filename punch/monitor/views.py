@@ -173,7 +173,7 @@ class BridgeEntryView(View):
         temperature = float(data['temperature'])
         brix = float(data['brix'])
         try:
-            tank = Tank.objects.get(sensor_uuid=sensor_uuid)
+            tank = Tank.objects.get(sensor_uuid=sensor_uuid, ended_at=None)
             # If tank exists, add a new reading
             reading = Reading(temperature=temperature, brix=brix, tank=tank)
             reading.save()
@@ -181,5 +181,3 @@ class BridgeEntryView(View):
             # Otherwise, tank doesn't exist and should be noticed by the set.
             r_bridge = RawBridge(bridge_uuid)
             r_bridge.add_available_sensor(sensor_uuid)
-        except:
-            import ipdb; ipdb.set_trace()

@@ -3,7 +3,6 @@ from django import forms
 from punch.monitor.models import Tank
 
 
-# TODO: need to add form for tanks such that when a new tank is added, only one ACTIVE user id exists
 class TankCreationForm(forms.ModelForm):
     """
     A form for creating a new tank. This form ensures that no new tanks are added that have a sensor ID that is also
