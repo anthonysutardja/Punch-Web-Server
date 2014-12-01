@@ -176,6 +176,7 @@ class BridgeEntryView(View):
             tank = Tank.objects.get(sensor_uuid=sensor_uuid, ended_at=None)
             # If tank exists, add a new reading
             reading = Reading(temperature=temperature, brix=brix, tank=tank)
+            # TODO: add signal for reading
             reading.save()
         except Tank.DoesNotExist:
             # Otherwise, tank doesn't exist and should be noticed by the set.

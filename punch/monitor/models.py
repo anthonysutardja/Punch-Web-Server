@@ -54,6 +54,12 @@ class Tank(models.Model):
     # Relationships
     location = models.ForeignKey(Location)
 
+    # Alert settings
+    alert_temp_high = models.FloatField(blank=True, null=True)
+    alert_temp_low = models.FloatField(blank=True, null=True)
+    alert_brix_high = models.FloatField(blank=True, null=True)
+    alert_brix_low = models.FloatField(blank=True, null=True)
+
     @property
     def is_active(self):
         """Return a boolean indicating if the tank is currently active."""

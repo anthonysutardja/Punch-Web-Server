@@ -25,4 +25,4 @@ def send_sms(phone_number, msg):
     )
 
 
-# TODO: Add phone call message
+# TODO: Add phone call message in the future
