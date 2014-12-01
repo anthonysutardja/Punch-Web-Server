@@ -134,7 +134,7 @@ class TankView(LoginRequiredMixin, DetailView):
     # TODO: remove when we have real readings
     def create_fake_readings(self):
         readings = []
-        for i in range(0, 1000):
+        for i in range(0, 100):
             t = random() * 10 + 20
             b = random() * 5 + 10
             d = datetime(2014, 11, 24, 18, 12, 8, 393455) + timedelta(minutes=15 * i)

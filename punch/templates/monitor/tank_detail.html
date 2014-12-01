@@ -4,6 +4,7 @@
 {% block nav_title %}{{ tank.name }}{% endblock %}
 
 {% block css %}
+    <link href="{% static "css/graphs.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
@@ -37,51 +38,37 @@
     <!-- Load reading data -->
     <script>
         var tankReadings = {{ readings | safe}};
+
+        // Remap the Temperature data
+        var tempReadings = tankReadings.map(function(d) {
+            var dd = {};
+            dd.created_at = new Date(Date.parse(d.fields.created_at));
+            dd.value = d.fields.temperature;
+            return dd;
+        });
+
+        // Remap the Brix data
+        var brixReadings = tankReadings.map(function(d) {
+            var dd = {};
+            dd.created_at = new Date(Date.parse(d.fields.created_at));
+            dd.value = d.fields.brix;
+            return dd;
+        });
     </script>
 
     <script>
         $(document).ready(function(){
+            // Plot the visualization
             data_graphic({
-            data: [[  {'day': 1, 'value': 35},
-                      {'day': 2, 'value': 34},
-                      {'day': 3, 'value': 29},
-                      {'day': 4, 'value': 22},
-                      {'day': 5, 'value': 15},
-                      {'day': 6, 'value': 9},
-                      {'day': 7, 'value': 4},
-                      {'day': 8, 'value': 2},
-                      {'day': 9, 'value': 1},
-                      {'day': 10, 'value': 1}],
-                  [   {'day': 1, 'value': 35},
-                      {'day': 2, 'value': 35},
-                      {'day': 3, 'value': 35},
-                      {'day': 4, 'value': 30},
-                      {'day': 5, 'value': 25},
-                      {'day': 6, 'value': 18},
-                      {'day': 7, 'value': 10},
-                      {'day': 8, 'value': 5},
-                      {'day': 9, 'value': 4},
-                      {'day': 10, 'value': 2}],
-                  [   {'day': 1, 'value': 21},
-                      {'day': 2, 'value': 22},
-                      {'day': 3, 'value': 25},
-                      {'day': 4, 'value': 29},
-                      {'day': 5, 'value': 31},
-                      {'day': 6, 'value': 30},
-                      {'day': 7, 'value': 28},
-                      {'day': 8, 'value': 25},
-                      {'day': 9, 'value': 22},
-                      {'day': 10, 'value': 21}]],
-            width: 400,
-            height: 250,
-            target: ".detailGraph",
-            x_accessor: 'day',
-            y_accessor: 'value',
-            interpolate: "monotone",
-            legend: ['Expected Brix (in degrees Brix)', 'Actual Brix (in degrees Brix)', 'Temperature (in degrees Celsius)'],
-            legend_target: '.legend'
+                data: [tempReadings, brixReadings],
+                width: 800,
+                height: 250,
+                target: ".detailGraph",
+                x_accessor: 'created_at',
+                y_accessor: 'value',
+                legend: ['Actual Brix (in degrees Brix)', 'Temperature (in degrees Celsius)'],
+                legend_target: '.legend'
+            });
         });
-        });
-
-        </script>
+    </script>
 {% endblock %}
