@@ -3,7 +3,6 @@ from punch.monitor.lib.phone import send_sms
 
 def check_and_send_alerts(reading):
     """Check and send all the alerts."""
-    print "REACHED"
     temperature = reading.temperature
     brix = reading.brix
     users = reading.tank.location.users.all()

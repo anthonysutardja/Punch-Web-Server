@@ -1,5 +1,6 @@
 {% extends "dash_base.html" %}
 {% load staticfiles %}
+{% load addcss %}
 {% block title %}Add a new bridge{% endblock %}
 {% block nav_title %}Add bridge{% endblock %}
 
@@ -36,7 +37,53 @@
     <h3>Add a bridge to <span class="gray">{{ location.name }}</span></h3>
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% if form.non_field_errors %}
+            <div class="col-sm-7 alert alert-warning" role="alert">
+              <span class="sr-only">Error:</span>
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+        {% if form.uuid.errors %}
+        <div class="row">
+            <div class="col-sm-7 alert alert-danger" role="alert">
+              <span class="sr-only">Error:</span>
+              {{ form.uuid.errors }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div id="uuid-group" class="form-group">
+           <div class="row">
+               <label for="id_uuid" class="col-sm-2 control-label">{{ form.uuid.label }}</label>
+               <div class="col-sm-4">
+                   {{ form.uuid | addcss:"form-control"}}
+               </div>
+           </div>
+        </div>
         <button type="submit" class="btn btn-large btn-primary">Add</button>
     </form>
+{% endblock %}
+
+
+{% block js %}
+    <script>
+    $(document).ready(function(){
+        $('#id_uuid').keypress(function (e) {
+            console.log(e.currentTarget.value.length);
+            var regex = new RegExp("^[a-zA-Z0-9]+$");
+            var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+            if (e.currentTarget.value.length === 32) {
+                $('#uuid-group').addClass('has-success');
+            } else {
+                $('#uuid-group').removeClass('has-success');
+            }
+            if (regex.test(str)) {
+                return true;
+            }
+
+            e.preventDefault();
+            return false;
+        });
+    });
+    </script>
 {% endblock %}

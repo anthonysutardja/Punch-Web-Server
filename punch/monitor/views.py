@@ -15,7 +15,7 @@ from punch.monitor.models import (
     Tank,
     Reading,
 )
-from punch.monitor.forms import TankCreationForm
+from punch.monitor.forms import TankCreationForm, BridgeCreationForm
 from punch.monitor.signals import check_and_send_alerts
 from punch.mixins import LoginRequiredMixin
 
@@ -60,6 +60,7 @@ class LocationView(LoginRequiredMixin, DetailView):
 class BridgeCreateView(LoginRequiredMixin, CreateView):
     model = Bridge
     fields = ('uuid', )
+    form_class = BridgeCreationForm
 
     def get_context_data(self, **kwargs):
         context = super(BridgeCreateView, self).get_context_data(**kwargs)

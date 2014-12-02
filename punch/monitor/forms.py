@@ -1,6 +1,6 @@
 from django import forms
 
-from punch.monitor.models import Tank
+from punch.monitor.models import Tank, Bridge
 
 
 class TankCreationForm(forms.ModelForm):
@@ -33,3 +33,18 @@ class TankCreationForm(forms.ModelForm):
             self.error_messages['duplicate_sensor'],
             code='duplicate_sensor_uuid',
         )
+
+
+class BridgeCreationForm(forms.ModelForm):
+    """
+    A form for adding a new bridge.
+    """
+    uuid = forms.CharField(label="Bridge UUID", max_length=32)
+
+    class Meta:
+        model = Bridge
+        fields = ('uuid',)
+
+    def clean_uuid(self):
+        """Clean the uuid for unnecessary hyphens."""
+        return self.cleaned_data["uuid"].replace('-', '')
