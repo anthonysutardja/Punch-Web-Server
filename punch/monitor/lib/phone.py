@@ -1,5 +1,7 @@
 import os
 
+from django.conf import settings
+
 from twilio.rest import TwilioRestClient
 
 
@@ -18,11 +20,14 @@ client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
 
 def send_sms(phone_number, msg):
     """Send an SMS message to the given phone number."""
-    return client.messages.create(
-        body=msg,
-        to=phone_number,
-        from_=TWILIO_PHONE_NUMBER,
-    )
+    if not settings.PHONE_MESSAGE_ENABLED:
+        print phone_number, msg
+    else:
+        return client.messages.create(
+            body=msg,
+            to=phone_number,
+            from_=TWILIO_PHONE_NUMBER,
+        )
 
 
 # TODO: Add phone call message in the future

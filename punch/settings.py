@@ -116,3 +116,8 @@ CACHES = {
         'LOCATION': 'cache_table',
     }
 }
+
+
+# Phone Settings
+
+PHONE_MESSAGE_ENABLED = False

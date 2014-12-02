@@ -23,6 +23,8 @@
                 {{ form.non_field_errors }}
             </div>
         {% endif %}
+
+        <!-- Tank sensor UUID form -->
         <p class="lead">
             You'll need to choose from the list of available sensors. Make sure the UUID matches the device that
             you're putting in the tank.
@@ -49,6 +51,7 @@
             </div>
         </div>
 
+        <!-- Tank name form -->
         <p class="lead">Let's give your tank a <strong>descriptive</strong> name.</p>
         {% if form.name.errors %}
         <div class="row">
@@ -65,6 +68,38 @@
             <div class="col-sm-4">
                 {{ form.name | addcss:"form-control"}}
             </div>
+            </div>
+        </div>
+        <br/><br/>
+
+        <!-- Tank Alerts temperature high form -->
+        <div class="well well-lg">
+            <p class="lead">Set when you want to be alerted <span class="gray">(optional)</span></p>
+            {% if form.name.errors %}
+            <div class="row">
+                <div class="col-sm-7 alert alert-danger" role="alert">
+                  <span class="sr-only">Error:</span>
+                  {{ form.alert_temp_high.errors }}
+                  {{ form.alert_temp_low.errors }}
+                </div>
+            </div>
+            {% endif %}
+            <div class="form-group">
+                <div class="row">
+                    <label for="id_name" class="col-sm-4 control-label">{{ form.alert_temp_high.label }}</label>
+                    <div class="col-sm-2">
+                        {{ form.alert_temp_high | addcss:"form-control"}}
+                    </div>
+                    <div class="col-sm-1">°C</div>
+                </div>
+                <br/>
+                <div class="row">
+                    <label for="id_name" class="col-sm-4 control-label">{{ form.alert_temp_low.label }}</label>
+                    <div class="col-sm-2">
+                        {{ form.alert_temp_low | addcss:"form-control"}}
+                    </div>
+                    <div class="col-sm-1">°C</div>
+                </div>
             </div>
         </div>
 

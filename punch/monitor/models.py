@@ -73,7 +73,11 @@ class Tank(models.Model):
     @property
     def total_days(self):
         """Return the number of days that the tank was active for."""
-        return 0
+        if self.is_active:
+            dt = datetime.utcnow().replace(tzinfo=None) - self.started_at.replace(tzinfo=None)
+        else:
+            dt = self.ended_at.replace(tzinfo=None) - self.started_at.replace(tzinfo=None)
+        return dt.days + 1
 
     def get_absolute_url(self):
         return self.location.get_absolute_url() + 'tank/{id}/'.format(id=self.id)

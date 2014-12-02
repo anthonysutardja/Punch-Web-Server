@@ -14,10 +14,12 @@ class TankCreationForm(forms.ModelForm):
 
     name = forms.CharField(label="Name", max_length=80)
     sensor_uuid = forms.CharField(label="Sensor UUID", max_length=32)
+    alert_temp_high = forms.FloatField(label="Highest temperature that triggers alert", required=False)
+    alert_temp_low = forms.FloatField(label="Low temperature that triggers alert", required=False)
 
     class Meta:
         model = Tank
-        fields = ("sensor_uuid", "name")
+        fields = ("sensor_uuid", "name", "alert_temp_high", "alert_temp_low")
 
     def clean_sensor_uuid(self):
         # Since User.username is unique, this check is redundant,

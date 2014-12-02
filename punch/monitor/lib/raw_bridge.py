@@ -26,7 +26,7 @@ class RawBridge(object):
                 pass
 
     def get_available_sensors(self):
-        return cache.get(self._get_sensor_key())
+        return cache.get(self._get_sensor_key(), [])
 
     def _get_sensor_key(self):
         return 'bridge:{bid}:sensors'.format(bid=self.bridge_uuid)

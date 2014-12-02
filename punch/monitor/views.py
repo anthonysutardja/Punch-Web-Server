@@ -16,6 +16,7 @@ from punch.monitor.models import (
     Reading,
 )
 from punch.monitor.forms import TankCreationForm
+from punch.monitor.signals import check_and_send_alerts
 from punch.mixins import LoginRequiredMixin
 
 
@@ -168,7 +169,7 @@ class BridgeEntryView(View):
         )
 
     def process_load(self, data):
-        bridge_uuid = str(data['bridge_uuid'])
+        bridge_uuid = str(data['bridge_uuid'].replace('-', ''))
         sensor_uuid = str(data['sensor_uuid'])
         temperature = float(data['temperature'])
         brix = float(data['brix'])
@@ -178,6 +179,7 @@ class BridgeEntryView(View):
             reading = Reading(temperature=temperature, brix=brix, tank=tank)
             # TODO: add signal for reading
             reading.save()
+            check_and_send_alerts(reading)
         except Tank.DoesNotExist:
             # Otherwise, tank doesn't exist and should be noticed by the set.
             r_bridge = RawBridge(bridge_uuid)
