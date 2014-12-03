@@ -4,71 +4,105 @@
 {% block nav_title %}{{ tank.name }}{% endblock %}
 
 {% block css %}
-    <link href="{% static "css/graphs.css" %}" rel="stylesheet">
+<link href="{% static "css/graphs.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
-    <nav>
-      <ul class="pager">
-        <li class="previous"><a href="{{ location.get_absolute_url }}"><span aria-hidden="true">&larr;</span> Back to location page</a></li>
-      </ul>
-    </nav>
-    {% if tank.is_active %}
-        <p class="lead"><strong>{{ tank.name }}</strong> is reading loud and clear. The last reading was 10 minutes ago.</p>
-    {% else %}
-        <p class="lead"><strong>{{ tank.name }}</strong> has been completed. The fermentation process took {{ tank.total_days }} days. The historical measurements are shown below.</p>
-    {% endif %}
+<nav>
+  <ul class="pager">
+    <li class="previous"><a href="{{ location.get_absolute_url }}"><span aria-hidden="true">&larr;</span> Back to location page</a></li>
+  </ul>
+</nav>
+{% if tank.is_active %}
+<p class="lead"><strong>{{ tank.name }}</strong> is reading loud and clear. The last reading was 10 minutes ago.</p>
+{% else %}
+<p class="lead"><strong>{{ tank.name }}</strong> has been completed. The fermentation process took {{ tank.total_days }} days. The historical measurements are shown below.</p>
+{% endif %}
 
-    <div class='detailGraph'></div>
-    <div class='legend'></div>
+<div class='detailGraph'></div>
+<div class='legend'></div>
+<div class='expectedGraph'></div>
 
-    {% if tank.is_active %}
-    <h4>Done with this batch? Mark it as finished!</h4>
-    <div class="alert alert-warning" role="alert"><strong>Warning!</strong> Once a tank is marked as finished, the tank will no longer receive or record measurements.</div>
-    <a href="{{ tank.get_absolute_url }}end" class="btn btn-large btn-danger">Finish and stop</a>
-    {% endif %}
+<p>Expected Brix Curve</p>
+Day  1: <input id="Day1" type="text" name="Day1" value="35" onchange="updateCurve()"><br>
+Day  2: <input id="Day2" type="text" name="Day2" value="34" onchange="updateCurve()"><br>
+Day  3: <input id="Day3" type="text" name="Day3" value="29" onchange="updateCurve()"><br>
+Day  4: <input id="Day4" type="text" name="Day4" value="22" onchange="updateCurve()"><br>
+Day  5: <input id="Day5" type="text" name="Day5" value="15" onchange="updateCurve()"><br>
+Day  6: <input id="Day6" type="text" name="Day6" value="9" onchange="updateCurve()"><br>
+Day  7: <input id="Day7" type="text" name="Day7" value="4" onchange="updateCurve()"><br>
+Day  8: <input id="Day8" type="text" name="Day8" value="2" onchange="updateCurve()"><br>
+Day  9: <input id="Day9" type="text" name="Day9" value="1" onchange="updateCurve()"><br>
+Day 10: <input id="Day10" type="text" name="Day10" value="1" onchange="updateCurve()"><br>
+
+{% if tank.is_active %}
+<h4>Done with this batch? Mark it as finished!</h4>
+<div class="alert alert-warning" role="alert"><strong>Warning!</strong> Once a tank is marked as finished, the tank will no longer receive or record measurements.</div>
+<a href="{{ tank.get_absolute_url }}end" class="btn btn-large btn-danger">Finish and stop</a>
+{% endif %}
 {% endblock %}
 
 {% block js %}
-    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.js' charset='utf-8'></script>
-    <script src="{% static "assets/js/ace.js" %}" charset="utf-8"></script>
-    <script src="{% static "assets/js/metricsgraphics.js" %}"></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.js' charset='utf-8'></script>
+<script src="{% static "assets/js/ace.js" %}" charset="utf-8"></script>
+<script src="{% static "assets/js/metricsgraphics.js" %}"></script>
 
-    <!-- Load reading data -->
-    <script>
-        var tankReadings = {{ readings | safe}};
+<!-- Load reading data -->
+<script>
+var tankReadings = {{ readings | safe}};
 
         // Remap the Temperature data
         var tempReadings = tankReadings.map(function(d) {
-            var dd = {};
-            dd.created_at = new Date(Date.parse(d.fields.created_at));
-            dd.value = d.fields.temperature;
-            return dd;
+          var dd = {};
+          dd.created_at = new Date(Date.parse(d.fields.created_at));
+          dd.value = d.fields.temperature;
+          return dd;
         });
 
         // Remap the Brix data
         var brixReadings = tankReadings.map(function(d) {
-            var dd = {};
-            dd.created_at = new Date(Date.parse(d.fields.created_at));
-            dd.value = d.fields.brix;
-            return dd;
+          var dd = {};
+          dd.created_at = new Date(Date.parse(d.fields.created_at));
+          dd.value = d.fields.brix;
+          return dd;
         });
-    </script>
 
-    <script>
-        $(document).ready(function(){
+        var expectedBrix = [];
+
+        // Map the expected Brix curve
+        function updateCurve(){
+          expectedBrix = [ {'created_at': new Date(Date.parse(tankReadings[0].fields.created_at)), 'value': parseInt(document.getElementById("Day1").value)},
+          {'created_at': new Date(Date.parse(tankReadings[10].fields.created_at)), 'value': parseInt(document.getElementById("Day2").value)},
+          {'created_at': new Date(Date.parse(tankReadings[20].fields.created_at)), 'value': parseInt(document.getElementById("Day3").value)},
+          {'created_at': new Date(Date.parse(tankReadings[30].fields.created_at)), 'value': parseInt(document.getElementById("Day4").value)},
+          {'created_at': new Date(Date.parse(tankReadings[40].fields.created_at)), 'value': parseInt(document.getElementById("Day5").value)},
+          {'created_at': new Date(Date.parse(tankReadings[50].fields.created_at)), 'value': parseInt(document.getElementById("Day6").value)},
+          {'created_at': new Date(Date.parse(tankReadings[60].fields.created_at)), 'value': parseInt(document.getElementById("Day7").value)},
+          {'created_at': new Date(Date.parse(tankReadings[70].fields.created_at)), 'value': parseInt(document.getElementById("Day8").value)},
+          {'created_at': new Date(Date.parse(tankReadings[80].fields.created_at)), 'value': parseInt(document.getElementById("Day9").value)},
+          {'created_at': new Date(Date.parse(tankReadings[90].fields.created_at)), 'value': parseInt(document.getElementById("Day10").value)}];
+
             // Plot the visualization
             data_graphic({
-                data: [tempReadings, brixReadings],
-                width: 800,
-                height: 250,
-                target: ".detailGraph",
-                x_accessor: 'created_at',
-                y_accessor: 'value',
-                legend: ['Actual Brix (in degrees Brix)', 'Temperature (in degrees Celsius)'],
-                legend_target: '.legend'
+              data: [tempReadings, brixReadings, expectedBrix],
+              width: 800,
+              height: 250,
+              target: ".detailGraph",
+              x_accessor: 'created_at',
+              y_accessor: 'value',
+              legend: ['Actual Brix (in degrees Brix)', 'Temperature (in degrees Celsius)', 'Expected Brix (in degrees Brix)'],
+              legend_target: '.legend'
             });
-        });
-    </script>
-{% endblock %}
+          }
+
+          </script>
+
+          <script>
+
+          $(document).ready(function(){
+            updateCurve();
+
+          });
+          </script>
+          {% endblock %}
