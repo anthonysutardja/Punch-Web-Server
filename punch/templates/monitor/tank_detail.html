@@ -19,24 +19,34 @@
 <p class="lead"><strong>{{ tank.name }}</strong> has been completed. The fermentation process took {{ tank.total_days }} days. The historical measurements are shown below.</p>
 {% endif %}
 
-<div class='date' id='date'></div>
-<div class='expected' id='expected'></div>
-<div class='actual' id='actual'></div>
-<div class='temperature' id='temperature'></div>
+<div style="float:left;">
+  <p> &nbsp;</p>
+  <p id='date'></p>
+  <p id='expected'>Expected Brix  degrees Brix</p>
+  <p id='actual'>Actual Brix  degrees Brix</p>
+  <p id='temperature'>Temperature  degrees Celsius</p>
+</div>
+
+<div class="form-group" style="float:right;">
+<p class="lead"> &nbsp;</p>
+Day  6: <input id="Day6" type="text" name="&nbsp;Day6" value="9.00" onchange="updateCurve()"><br>
+Day  7: <input id="Day7" type="text" name="&nbsp;Day7" value="4.00" onchange="updateCurve()"><br>
+Day  8: <input id="Day8" type="text" name="&nbsp;Day8" value="2.00" onchange="updateCurve()"><br>
+Day  9: <input id="Day9" type="text" name="&nbsp;Day9" value="1.00" onchange="updateCurve()"><br>
+Day 10: <input id="Day10" type="text" name="Day10" value="1.00" onchange="updateCurve()"><br>
+</div>
+
+<div class="form-group" style="float:right;">
+<p class="lead">Expected Brix Curve</p>
+Day  1: <input id="Day1" type="text" name="&nbsp;Day1" value="35.00" onchange="updateCurve()"><br>
+Day  2: <input id="Day2" type="text" name="&nbsp;Day2" value="34.00" onchange="updateCurve()"><br>
+Day  3: <input id="Day3" type="text" name="&nbsp;Day3" value="29.00" onchange="updateCurve()"><br>
+Day  4: <input id="Day4" type="text" name="&nbsp;Day4" value="22.00" onchange="updateCurve()"><br>
+Day  5: <input id="Day5" type="text" name="&nbsp;Day5" value="15.00" onchange="updateCurve()"><br>
+</div>
+
 <div class='detailGraph'></div>
 <div class='legend'></div>
-
-<p>Expected Brix Curve</p>
-Day  1: <input id="Day1" type="text" name="Day1" value="35" onchange="updateCurve()"><br>
-Day  2: <input id="Day2" type="text" name="Day2" value="34" onchange="updateCurve()"><br>
-Day  3: <input id="Day3" type="text" name="Day3" value="29" onchange="updateCurve()"><br>
-Day  4: <input id="Day4" type="text" name="Day4" value="22" onchange="updateCurve()"><br>
-Day  5: <input id="Day5" type="text" name="Day5" value="15" onchange="updateCurve()"><br>
-Day  6: <input id="Day6" type="text" name="Day6" value="9" onchange="updateCurve()"><br>
-Day  7: <input id="Day7" type="text" name="Day7" value="4" onchange="updateCurve()"><br>
-Day  8: <input id="Day8" type="text" name="Day8" value="2" onchange="updateCurve()"><br>
-Day  9: <input id="Day9" type="text" name="Day9" value="1" onchange="updateCurve()"><br>
-Day 10: <input id="Day10" type="text" name="Day10" value="1" onchange="updateCurve()"><br>
 
 {% if tank.is_active %}
 <h4>Done with this batch? Mark it as finished!</h4>
@@ -110,6 +120,21 @@ var tankReadings = {{ readings | safe}};
           {'created_at': expectedDates[9], 'value': parseInt(document.getElementById("Day10").value)}];
           closest_date = expectedBrix[0];
 
+          var last_reading = brixReadings.length - 1;
+          closest_date = expectedBrix[0];
+          var closest_diff = Math.abs(brixReadings[last_reading].created_at - expectedBrix[0].created_at);
+          for (j = 0; j < expectedBrix.length; j++){
+            var diff = Math.abs(brixReadings[last_reading].created_at - expectedBrix[j].created_at);
+            if (diff < closest_diff) {
+              closest_diff = diff;
+              closest_date = expectedBrix[j];
+            }
+          }
+          document.getElementById("date").innerHTML = brixReadings[last_reading].created_at;
+          document.getElementById("expected").innerHTML = 'Expected Brix  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' + closest_date.value.toFixed(2) + ' degrees Brix';
+          document.getElementById("actual").innerHTML = 'Actual Brix &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' + (brixReadings[last_reading].value).toFixed(2) + ' degrees Brix';
+          document.getElementById("temperature").innerHTML = 'Temperature &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' + (tempReadings[last_reading].value).toFixed(2) + ' degrees Celsius';
+
             // Plot the visualization
             data_graphic({
               data: [brixReadings, tempReadings, expectedBrix],
@@ -118,6 +143,7 @@ var tankReadings = {{ readings | safe}};
               target: ".detailGraph",
               x_accessor: 'created_at',
               y_accessor: 'value',
+              show_rollover_text: false,
               rollover_callback: function(d, i) {
 
                 hover_date = d.created_at;
@@ -138,14 +164,14 @@ var tankReadings = {{ readings | safe}};
                   }
 
 
-                  $('.detailGraph svg .active_datapoint')
+                  /*$('.detailGraph svg .active_datapoint')
                     .html((d.created_at) + ' &nbsp; '
-                         + 'Measured Brix ' + prefix.scale(d.value).toFixed(2) + ' Measured Temperature ' + prefix.scale(tempReadings[i].value).toFixed(2) + ' Expected Brix ' + closest_date.value);
+                         + 'Measured Brix ' + prefix.scale(d.value).toFixed(2) + ' Measured Temperature ' + prefix.scale(tempReadings[i].value).toFixed(2) + ' Expected Brix ' + closest_date.value);*/
 
                     document.getElementById("date").innerHTML = d.created_at;
-                    document.getElementById("expected").innerHTML = 'Expected Brix ' + closest_date.value + ' degrees Brix';
-                    document.getElementById("actual").innerHTML = 'Actual Brix ' + prefix.scale(d.value).toFixed(2) + ' degrees Brix';
-                    document.getElementById("temperature").innerHTML = 'Temperature ' + prefix.scale(tempReadings[i].value).toFixed(2) + ' degrees Celsius';
+                    document.getElementById("expected").innerHTML = 'Expected Brix  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' + closest_date.value.toFixed(2) + ' degrees Brix';
+                    document.getElementById("actual").innerHTML = 'Actual Brix &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' + prefix.scale(d.value).toFixed(2) + ' degrees Brix';
+                    document.getElementById("temperature").innerHTML = 'Temperature &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' + prefix.scale(tempReadings[i].value).toFixed(2) + ' degrees Celsius';
 
                 } 
 
@@ -162,14 +188,14 @@ var tankReadings = {{ readings | safe}};
                       }
                     }
 
-                    $('.detailGraph svg .active_datapoint')
+                    /*$('.detailGraph svg .active_datapoint')
                     .html((d.created_at) + ' &nbsp; '
-                         + 'Measured Brix ' + prefix.scale(brixReadings[(i - brixReadings.length)].value).toFixed(2) + ' Measured Temperature ' + prefix.scale(d.value).toFixed(2) + ' Expected Brix ' + closest_date.value);
+                         + 'Measured Brix ' + prefix.scale(brixReadings[(i - brixReadings.length)].value).toFixed(2) + ' Measured Temperature ' + prefix.scale(d.value).toFixed(2) + ' Expected Brix ' + closest_date.value);*/
 
                     document.getElementById("date").innerHTML = d.created_at;
-                    document.getElementById("expected").innerHTML = 'Expected Brix ' + closest_date.value + ' degrees Brix';
-                    document.getElementById("actual").innerHTML = 'Actual Brix ' + prefix.scale(brixReadings[(i - brixReadings.length)].value).toFixed(2) + ' degrees Brix';
-                    document.getElementById("temperature").innerHTML = 'Temperature ' + prefix.scale(d.value).toFixed(2) + ' degrees Celsius';
+                    document.getElementById("expected").innerHTML = 'Expected Brix  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' + closest_date.value.toFixed(2) + ' degrees Brix';
+                    document.getElementById("actual").innerHTML = 'Actual Brix &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' + prefix.scale(brixReadings[(i - brixReadings.length)].value).toFixed(2) + ' degrees Brix';
+                    document.getElementById("temperature").innerHTML = 'Temperature &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' + prefix.scale(d.value).toFixed(2) + ' degrees Celsius';
 
                 } 
 
@@ -188,14 +214,14 @@ var tankReadings = {{ readings | safe}};
                       }
                     }
 
-                    $('.detailGraph svg .active_datapoint')
+                    /*$('.detailGraph svg .active_datapoint')
                     .html((d.created_at) + ' &nbsp; '
-                         + 'Measured Brix ' + prefix.scale(closest_date.value).toFixed(2) + ' Measured Temperature ' + prefix.scale(closest_temp_date.value).toFixed(2) + ' Expected Brix ' + d.value);
+                         + 'Measured Brix ' + prefix.scale(closest_date.value).toFixed(2) + ' Measured Temperature ' + prefix.scale(closest_temp_date.value).toFixed(2) + ' Expected Brix ' + d.value);*/
 
                     document.getElementById("date").innerHTML = d.created_at;
-                    document.getElementById("expected").innerHTML = 'Expected Brix ' + d.value + ' degrees Brix';
-                    document.getElementById("actual").innerHTML = 'Actual Brix ' + prefix.scale(closest_date.value).toFixed(2) + ' degrees Brix';
-                    document.getElementById("temperature").innerHTML = 'Temperature ' + prefix.scale(closest_temp_date.value).toFixed(2) + ' degrees Celsius';
+                    document.getElementById("expected").innerHTML = 'Expected Brix  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' + d.value.toFixed(2) + ' degrees Brix';
+                    document.getElementById("actual").innerHTML = 'Actual Brix &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' + prefix.scale(closest_date.value).toFixed(2) + ' degrees Brix';
+                    document.getElementById("temperature").innerHTML = 'Temperature &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ' + prefix.scale(closest_temp_date.value).toFixed(2) + ' degrees Celsius';
                 }
               },
               legend: ['Actual Brix (in degrees Brix)', 'Temperature (in degrees Celsius)', 'Expected Brix (in degrees Brix)'],
