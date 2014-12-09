@@ -19,9 +19,12 @@
 <p class="lead"><strong>{{ tank.name }}</strong> has been completed. The fermentation process took {{ tank.total_days }} days. The historical measurements are shown below.</p>
 {% endif %}
 
+<div class='date' id='date'></div>
+<div class='expected' id='expected'></div>
+<div class='actual' id='actual'></div>
+<div class='temperature' id='temperature'></div>
 <div class='detailGraph'></div>
 <div class='legend'></div>
-<div class='expectedGraph'></div>
 
 <p>Expected Brix Curve</p>
 Day  1: <input id="Day1" type="text" name="Day1" value="35" onchange="updateCurve()"><br>
@@ -69,29 +72,134 @@ var tankReadings = {{ readings | safe}};
         });
 
         var expectedBrix = [];
+        var closest_date;
+        var hover_date;
+        var initial_date = new Date(Date.parse(tankReadings[0].fields.created_at));
+        var date1 = new Date(initial_date);
+        date1.setDate(initial_date.getDate() + 1);
+        var date2 = new Date(date1);
+        date2.setDate(date1.getDate() + 1);
+        var date3 = new Date(date2);
+        date3.setDate(date2.getDate() + 1);
+        var date4 = new Date(date3);
+        date4.setDate(date3.getDate() + 1);
+        var date5 = new Date(date4);
+        date5.setDate(date4.getDate() + 1);
+        var date6 = new Date(date5);
+        date6.setDate(date5.getDate() + 1);
+        var date7 = new Date(date6);
+        date7.setDate(date6.getDate() + 1);
+        var date8 = new Date(date7);
+        date8.setDate(date7.getDate() + 1);
+        var date9 = new Date(date8);
+        date9.setDate(date8.getDate() + 1);
+        var expectedDates = [initial_date, date1, date2, date3, date4, date5, date6, date7, date8, date9];
+        hover_date = initial_date;
 
         // Map the expected Brix curve
         function updateCurve(){
-          expectedBrix = [ {'created_at': new Date(Date.parse(tankReadings[0].fields.created_at)), 'value': parseInt(document.getElementById("Day1").value)},
-          {'created_at': new Date(Date.parse(tankReadings[10].fields.created_at)), 'value': parseInt(document.getElementById("Day2").value)},
-          {'created_at': new Date(Date.parse(tankReadings[20].fields.created_at)), 'value': parseInt(document.getElementById("Day3").value)},
-          {'created_at': new Date(Date.parse(tankReadings[30].fields.created_at)), 'value': parseInt(document.getElementById("Day4").value)},
-          {'created_at': new Date(Date.parse(tankReadings[40].fields.created_at)), 'value': parseInt(document.getElementById("Day5").value)},
-          {'created_at': new Date(Date.parse(tankReadings[50].fields.created_at)), 'value': parseInt(document.getElementById("Day6").value)},
-          {'created_at': new Date(Date.parse(tankReadings[60].fields.created_at)), 'value': parseInt(document.getElementById("Day7").value)},
-          {'created_at': new Date(Date.parse(tankReadings[70].fields.created_at)), 'value': parseInt(document.getElementById("Day8").value)},
-          {'created_at': new Date(Date.parse(tankReadings[80].fields.created_at)), 'value': parseInt(document.getElementById("Day9").value)},
-          {'created_at': new Date(Date.parse(tankReadings[90].fields.created_at)), 'value': parseInt(document.getElementById("Day10").value)}];
+          expectedBrix = [{'created_at': expectedDates[0], 'value': parseInt(document.getElementById("Day1").value)},
+          {'created_at': expectedDates[1], 'value': parseInt(document.getElementById("Day2").value)},
+          {'created_at': expectedDates[2], 'value': parseInt(document.getElementById("Day3").value)},
+          {'created_at': expectedDates[3], 'value': parseInt(document.getElementById("Day4").value)},
+          {'created_at': expectedDates[4], 'value': parseInt(document.getElementById("Day5").value)},
+          {'created_at': expectedDates[5], 'value': parseInt(document.getElementById("Day6").value)},
+          {'created_at': expectedDates[6], 'value': parseInt(document.getElementById("Day7").value)},
+          {'created_at': expectedDates[7], 'value': parseInt(document.getElementById("Day8").value)},
+          {'created_at': expectedDates[8], 'value': parseInt(document.getElementById("Day9").value)},
+          {'created_at': expectedDates[9], 'value': parseInt(document.getElementById("Day10").value)}];
+          closest_date = expectedBrix[0];
 
             // Plot the visualization
             data_graphic({
-              data: [tempReadings, brixReadings, expectedBrix],
+              data: [brixReadings, tempReadings, expectedBrix],
               width: 800,
               height: 250,
               target: ".detailGraph",
               x_accessor: 'created_at',
               y_accessor: 'value',
+              rollover_callback: function(d, i) {
+
+                hover_date = d.created_at;
+
+                //custom format the rollover text, show days
+                var prefix = d3.formatPrefix(d.value);
+                
+                //if hovered over Brix reading
+                if (i < brixReadings.length){ 
+                  closest_date = expectedBrix[0];
+                  var closest_diff = Math.abs(d.created_at - expectedBrix[0].created_at);
+                  for (j = 0; j < expectedBrix.length; j++){
+                    var diff = Math.abs(d.created_at - expectedBrix[j].created_at);
+                    if (diff < closest_diff) {
+                      closest_diff = diff;
+                      closest_date = expectedBrix[j];
+                    }
+                  }
+
+
+                  $('.detailGraph svg .active_datapoint')
+                    .html((d.created_at) + ' &nbsp; '
+                         + 'Measured Brix ' + prefix.scale(d.value).toFixed(2) + ' Measured Temperature ' + prefix.scale(tempReadings[i].value).toFixed(2) + ' Expected Brix ' + closest_date.value);
+
+                    document.getElementById("date").innerHTML = d.created_at;
+                    document.getElementById("expected").innerHTML = 'Expected Brix ' + closest_date.value + ' degrees Brix';
+                    document.getElementById("actual").innerHTML = 'Actual Brix ' + prefix.scale(d.value).toFixed(2) + ' degrees Brix';
+                    document.getElementById("temperature").innerHTML = 'Temperature ' + prefix.scale(tempReadings[i].value).toFixed(2) + ' degrees Celsius';
+
+                } 
+
+                //if hovered over Temperature reading
+                else if (i < (brixReadings.length + tempReadings.length)){  
+                    closest_date = expectedBrix[0];
+                    var closest_diff = Math.abs(d.created_at - expectedBrix[0].created_at);
+
+                    for (j = 0; j < expectedBrix.length; j++){
+                      var diff = Math.abs(d.created_at - expectedBrix[j].created_at);
+                      if (diff < closest_diff) {
+                        closest_diff = diff;
+                        closest_date = expectedBrix[j];
+                      }
+                    }
+
+                    $('.detailGraph svg .active_datapoint')
+                    .html((d.created_at) + ' &nbsp; '
+                         + 'Measured Brix ' + prefix.scale(brixReadings[(i - brixReadings.length)].value).toFixed(2) + ' Measured Temperature ' + prefix.scale(d.value).toFixed(2) + ' Expected Brix ' + closest_date.value);
+
+                    document.getElementById("date").innerHTML = d.created_at;
+                    document.getElementById("expected").innerHTML = 'Expected Brix ' + closest_date.value + ' degrees Brix';
+                    document.getElementById("actual").innerHTML = 'Actual Brix ' + prefix.scale(brixReadings[(i - brixReadings.length)].value).toFixed(2) + ' degrees Brix';
+                    document.getElementById("temperature").innerHTML = 'Temperature ' + prefix.scale(d.value).toFixed(2) + ' degrees Celsius';
+
+                } 
+
+                //if hovered over expected Value
+                else { 
+                    closest_date = brixReadings[0];
+                    var closest_temp_date = tempReadings[0];
+                    var closest_diff = Math.abs(d.created_at - brixReadings[0].created_at);
+
+                    for (j = 0; j < brixReadings.length; j++){
+                      var diff = Math.abs(d.created_at - brixReadings[j].created_at);
+                      if (diff < closest_diff) {
+                        closest_diff = diff;
+                        closest_date = brixReadings[j];
+                        closest_temp_date = tempReadings[j];
+                      }
+                    }
+
+                    $('.detailGraph svg .active_datapoint')
+                    .html((d.created_at) + ' &nbsp; '
+                         + 'Measured Brix ' + prefix.scale(closest_date.value).toFixed(2) + ' Measured Temperature ' + prefix.scale(closest_temp_date.value).toFixed(2) + ' Expected Brix ' + d.value);
+
+                    document.getElementById("date").innerHTML = d.created_at;
+                    document.getElementById("expected").innerHTML = 'Expected Brix ' + d.value + ' degrees Brix';
+                    document.getElementById("actual").innerHTML = 'Actual Brix ' + prefix.scale(closest_date.value).toFixed(2) + ' degrees Brix';
+                    document.getElementById("temperature").innerHTML = 'Temperature ' + prefix.scale(closest_temp_date.value).toFixed(2) + ' degrees Celsius';
+                }
+              },
               legend: ['Actual Brix (in degrees Brix)', 'Temperature (in degrees Celsius)', 'Expected Brix (in degrees Brix)'],
+              markers: [{'created_at': hover_date}],
               legend_target: '.legend'
             });
           }
