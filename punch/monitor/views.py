@@ -126,11 +126,12 @@ class TankView(LoginRequiredMixin, DetailView):
         location = Location.objects.get(pk=int(self.kwargs.get('l_pk')))
         context['location'] = location
 
-        # Remove for now .. until we have real data
-        # context['readings'] = serializers.serialize('json', self.object.reading_set.all())
-
-        # Stub data below
-        context['readings'] = serializers.serialize('json', self.create_fake_readings())
+        readings = self.object.reading_set.all()
+        if readings:
+            context['readings'] = serializers.serialize('json', readings)
+        else:
+            # If no readings, use randomly generated data
+            context['readings'] = serializers.serialize('json', self.create_fake_readings())
         return context
 
     # TODO: remove when we have real readings

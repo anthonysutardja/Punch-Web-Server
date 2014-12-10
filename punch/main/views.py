@@ -16,8 +16,15 @@ class AboutView(TemplateView):
     template_name = 'about.html'
 
 
-class DashboardView(LoginRequiredMixin, TemplateView):
+class DashboardView(LoginRequiredMixin, RedirectView):
     template_name = 'dashboard.html'
+
+    def get_redirect_url(self, *args, **kwargs):
+        locations = self.request.user.location_set.all()
+        if locations:
+            return locations[0].get_absolute_url()
+        else:
+            return '/location/create'
 
 
 class RegisterView(CreateView):
