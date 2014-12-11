@@ -24,5 +24,6 @@ urlpatterns = patterns(
     url(r'^location/(?P<l_pk>\d+)/tank/(?P<pk>\d+)/end$', monitor_views.TankFinishRedirectView.as_view(), name='tank-finish'),
     # Update entry point
     url(r'^updater$', csrf_exempt(monitor_views.BridgeEntryView.as_view()), name='reading-entry-point'),
+    url(r'^heartbeat$', csrf_exempt(monitor_views.HeartBeatEntryView.as_view()), name='heartbeat'),
     url(r'^admin/', include(admin.site.urls)),
 )

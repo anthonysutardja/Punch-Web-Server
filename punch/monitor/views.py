@@ -186,3 +186,13 @@ class BridgeEntryView(View):
             # Otherwise, tank doesn't exist and should be noticed by the set.
             r_bridge = RawBridge(bridge_uuid)
             r_bridge.add_available_sensor(sensor_uuid)
+
+
+class HeartBeatEntryView(View):
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponse(
+            json.dumps({'received': True}),
+            content_type='application/json',
+            **kwargs
+        )
