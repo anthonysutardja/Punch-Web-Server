@@ -138,9 +138,9 @@ class TankView(LoginRequiredMixin, DetailView):
     def create_fake_readings(self):
         readings = []
         for i in range(0, 100):
-            t = random() * 10 + 20
-            b = random() * 5 + 10
-            d = datetime(2014, 11, 24, 18, 12, 8, 393455) + timedelta(minutes=15 * i)
+            t = random() * 8 + 27
+            b = random() * 2 + 30 - 1.02 ** i - i * 0.2
+            d = datetime(2014, 11, 24, 18, 12, 8, 393455) + timedelta(minutes=120 * i)
             readings.append(Reading(temperature=t, brix=b, created_at=d))
         return readings
 

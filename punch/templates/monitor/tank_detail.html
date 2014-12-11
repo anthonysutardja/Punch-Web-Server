@@ -14,13 +14,13 @@
   </ul>
 </nav>
 {% if tank.is_active %}
-<p class="lead"><strong>{{ tank.name }}</strong> is reading loud and clear. The last reading was 10 minutes ago.</p>
+<p class="lead"><strong>{{ tank.name }}</strong> is reading loud and clear. It has been running for {{ tank.total_days }} days.</p>
 {% else %}
 <p class="lead"><strong>{{ tank.name }}</strong> has been completed. The fermentation process took {{ tank.total_days }} days. The historical measurements are shown below.</p>
 {% endif %}
 
 <div style="float:left;">
-  <p> &nbsp;</p>
+  <p class="lead">Measurement Data</p>
   <p id='date'></p>
   <p id='expected'>Expected Brix  degrees Brix</p>
   <p id='actual'>Actual Brix  degrees Brix</p>
@@ -29,20 +29,20 @@
 
 <div class="form-group" style="float:right;">
 <p class="lead"> &nbsp;</p>
-Day  6: <input id="Day6" type="text" name="&nbsp;Day6" value="9.00" onchange="updateCurve()"><br>
-Day  7: <input id="Day7" type="text" name="&nbsp;Day7" value="4.00" onchange="updateCurve()"><br>
-Day  8: <input id="Day8" type="text" name="&nbsp;Day8" value="2.00" onchange="updateCurve()"><br>
-Day  9: <input id="Day9" type="text" name="&nbsp;Day9" value="1.00" onchange="updateCurve()"><br>
-Day 10: <input id="Day10" type="text" name="Day10" value="1.00" onchange="updateCurve()"><br>
+Day  6: <input id="Day6" class="form-control cust-r-input" type="text" name="&nbsp;Day6" value="9.00" onchange="updateCurve()"><br>
+Day  7: <input id="Day7" class="form-control cust-r-input" type="text" name="&nbsp;Day7" value="4.00" onchange="updateCurve()"><br>
+Day  8: <input id="Day8" class="form-control cust-r-input" type="text" name="&nbsp;Day8" value="2.00" onchange="updateCurve()"><br>
+Day  9: <input id="Day9" class="form-control cust-r-input" type="text" name="&nbsp;Day9" value="1.00" onchange="updateCurve()"><br>
+Day 10:<input id="Day10" class="form-control cust-r-input" type="text" name="Day10" value="1.00" onchange="updateCurve()"><br>
 </div>
 
 <div class="form-group" style="float:right;">
 <p class="lead">Expected Brix Curve</p>
-Day  1: <input id="Day1" type="text" name="&nbsp;Day1" value="35.00" onchange="updateCurve()"><br>
-Day  2: <input id="Day2" type="text" name="&nbsp;Day2" value="34.00" onchange="updateCurve()"><br>
-Day  3: <input id="Day3" type="text" name="&nbsp;Day3" value="29.00" onchange="updateCurve()"><br>
-Day  4: <input id="Day4" type="text" name="&nbsp;Day4" value="22.00" onchange="updateCurve()"><br>
-Day  5: <input id="Day5" type="text" name="&nbsp;Day5" value="15.00" onchange="updateCurve()"><br>
+Day  1: <input id="Day1" class="form-control cust-r-input" type="text" name="&nbsp;Day1" value="35.00" onchange="updateCurve()"><br>
+Day  2: <input id="Day2" class="form-control cust-r-input" type="text" name="&nbsp;Day2" value="34.00" onchange="updateCurve()"><br>
+Day  3: <input id="Day3" class="form-control cust-r-input" type="text" name="&nbsp;Day3" value="29.00" onchange="updateCurve()"><br>
+Day  4: <input id="Day4" class="form-control cust-r-input" type="text" name="&nbsp;Day4" value="22.00" onchange="updateCurve()"><br>
+Day  5: <input id="Day5" class="form-control cust-r-input" type="text" name="&nbsp;Day5" value="15.00" onchange="updateCurve()"><br>
 </div>
 
 <div class='detailGraph'></div>

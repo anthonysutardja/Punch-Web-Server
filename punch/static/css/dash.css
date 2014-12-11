@@ -44,3 +44,7 @@ span.gray {
     background-color: #602d73;
 }
 
+.cust-r-input {
+    display: inline-block;
+    width: 80px;
+}
